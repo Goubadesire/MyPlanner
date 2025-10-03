@@ -1,0 +1,16 @@
+.formcontainer{
+     /* fermé par défaut */
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+}
+
+
+/* ouvert */
+.containerTcheOpen {
+    max-height: 1200px; /* assez grand pour le formulaire */
+    opacity: 1;
+    transform: translateY(0);
+}

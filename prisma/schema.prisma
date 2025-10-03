@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  pseudo   String @unique
+  password String
+  createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  type      String
+  montant   Float
+  date      DateTime
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  type        String
+  description String
+  statut      String
+  date        DateTime
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Matiere {
+  id         Int     @id @default(autoincrement())
+  nom        String
+  coefficient Int
+  notes      Note[]  
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Note {
+  id         Int     @id @default(autoincrement())
+  note       Float
+  matiereId  Int
+  matiere    Matiere @relation(fields: [matiereId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+

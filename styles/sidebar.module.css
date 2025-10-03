@@ -1,0 +1,25 @@
+.sidebarHeader{
+    background-color: royalblue;
+    padding: 20px;
+    text-align: center;
+}
+
+
+
+.sidebarMenu li{
+    padding: .5rem 1.2rem;
+    border-radius: 5px;
+    margin: 4px 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+    width: 100%;
+}
+.sidebarMenu li:hover{
+    background-color: lightgray;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+    color: black;
+    font-weight: 600;
+}
