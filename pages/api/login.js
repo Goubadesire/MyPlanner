@@ -1,8 +1,10 @@
 // pages/api/login.js
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import { createClient } from '@supabase/supabase-js';
 
-const prisma = new PrismaClient();
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -16,22 +18,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Récupération de l'utilisateur par pseudo
-    const user = await prisma.user.findUnique({
-      where: { pseudo },
-    });
+    // Vérifier si l’utilisateur existe
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('pseudo', pseudo)
+      .single();
 
-    if (!user) {
+    if (error || !user) {
       return res.status(401).json({ message: 'Identifiants incorrects' });
     }
 
-    // Vérification du mot de passe hashé
+    // Comparer le mot de passe
+    const bcrypt = require('bcryptjs');
     const passwordValid = await bcrypt.compare(password, user.password);
+
     if (!passwordValid) {
       return res.status(401).json({ message: 'Identifiants incorrects' });
     }
 
-    // Connexion réussie
     return res.status(200).json({ message: 'Connexion réussie' });
   } catch (err) {
     console.error('Erreur API login:', err);
