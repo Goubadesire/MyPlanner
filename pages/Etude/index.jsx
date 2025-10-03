@@ -1,4 +1,4 @@
-import Layout from "../../components/Layout";
+import Layout from "../../components/layout";
 import Head from "next/head";
 import Style from "./etude.module.css";
 import { useState, useEffect } from "react";
