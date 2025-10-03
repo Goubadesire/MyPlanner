@@ -1,5 +1,7 @@
 // pages/api/login.js
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+
 const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
@@ -14,15 +16,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    const user = await prisma.user.findUnique({ where: { pseudo } });
+    // Récupération de l'utilisateur par pseudo
+    const user = await prisma.user.findUnique({
+      where: { pseudo },
+    });
 
-    if (!user || user.password !== password) {
+    if (!user) {
       return res.status(401).json({ message: 'Identifiants incorrects' });
     }
 
+    // Vérification du mot de passe hashé
+    const passwordValid = await bcrypt.compare(password, user.password);
+    if (!passwordValid) {
+      return res.status(401).json({ message: 'Identifiants incorrects' });
+    }
+
+    // Connexion réussie
     return res.status(200).json({ message: 'Connexion réussie' });
   } catch (err) {
-    console.error(err);
+    console.error('Erreur API login:', err);
     return res.status(500).json({ message: 'Erreur serveur' });
   }
 }
