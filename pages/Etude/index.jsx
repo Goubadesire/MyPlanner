@@ -105,13 +105,13 @@ export default function Etude() {
   };
 
   // Supprimer une note
-  const handleDeleteNote = async (id) => {
+  const handleDeleteNote = async (noteId) => {
     if (!confirm("Supprimer cette note ?")) return;
     try {
-      await fetch(`/api/notes?id=${matiereSelectionnee}`, {
+      await fetch(`/api/notes?id=${noteId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id: noteId }),
       });
       fetchMatieres();
     } catch (err) {
@@ -217,7 +217,7 @@ export default function Etude() {
                 </button>
                 <button
                   className="btn btnAnuler w-full sm:w-auto btn-md sm:btn-sm md:btn-md lg:btn-lg"
-                  onClick={() => { setMatiereSelectionnee(m.id); handleDeleteNote(n.id); }}
+                   onClick={() => handleDeleteNote(n.id)}
                 >
                   Supprimer
                 </button>

@@ -28,7 +28,7 @@ export default function Layout({ children }) {
           onClick={() => setMobileOpen(false)}
         >
           <div
-            className="fixed top-0 left-0 h-screen w-64 bg-base-200 z-50 mt-14"
+            className="fixed top-0 left-0 h-screen w-64 bg-base-200 bg-red-100 z-50 mt-14"
             onClick={(e) => e.stopPropagation()}
           >
             <Sidebar />
@@ -49,7 +49,7 @@ export default function Layout({ children }) {
       </div>
 
       {/* Contenu principal */}
-      <main className="pt-16 p-4 bg-base-100 min-h-screen md:ml-64 overflow-auto">
+      <main className="pt-16 p-4 bg-base-100  min-h-screen  md:ml-64 overflow-auto">
         {children}
       </main>
     </div>
