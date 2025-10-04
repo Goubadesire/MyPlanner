@@ -67,19 +67,16 @@ export default function Etude() {
   };
 
   // Supprimer une matière
-  const handleDeleteMatiere = async (id) => {
-    if (!confirm("Supprimer cette matière ?")) return;
-    try {
-      await fetch(`/api/matieres`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
-      });
-      fetchMatieres();
-    } catch (err) {
-      console.error(err);
-    }
-  };
+ const handleDeleteMatiere = async (id) => {
+  if (!confirm("Supprimer cette matière ?")) return;
+  try {
+    await fetch(`/api/matieres?id=${id}`, { method: 'DELETE' });
+    fetchMatieres();
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 
   // Ajouter ou modifier une note
   const handleAddNote = async () => {
@@ -156,7 +153,7 @@ export default function Etude() {
           </div>
 
           {/* Ajouter matière */}
-          <button className="btnPrimary" onClick={() => setOpenForm(true)}>Ajouter une matière</button>
+          <button className=" btn btnPrimary" onClick={() => setOpenForm(true)}>Ajouter une matière</button>
 
           {/* Formulaire Matière */}
           <div className={`${'p-4 w-full'} ${Style.formcontainer} ${openForm ? Style.containerTcheOpen : ''}`}>
@@ -170,7 +167,7 @@ export default function Etude() {
                 <input type="number" value={coeffMatiere} onChange={e => setCoeffMatiere(Number(e.target.value))} />
               </div>
               <div className="flex w-full justify-center gap-3 mt-4">
-                <button className="btnSUcces w-55" type="submit">Ajouter</button>
+                <button className="btn btn-md sm:btn-sm btnSUcces w-55" type="submit">Ajouter</button>
                 <button className="btnAnuler w-55" onClick={() => { setOpenForm(false); setModifMatiereId(null); }}>Annuler</button>
               </div>
             </form>
@@ -178,39 +175,66 @@ export default function Etude() {
 
           {/* Liste des matières */}
           <ul className="flex flex-col gap-4 mt-4">
-            {matieres.map((m) => (
-              <li key={m.id} className="flex flex-col p-4 bg-base-100 rounded-lg shadow">
-                <div className="flex justify-between items-center">
-                  <span>{m.nom} (Coeff: {m.coefficient})</span>
-                  <div className="flex gap-2">
-                    <button className="btnPrimary" onClick={() => { setMatiereSelectionnee(m.id); setNoteFormOpen(true); }}>Ajouter note</button>
-                    <button className="btnMofifier" onClick={() => { setNomMatiere(m.nom); setCoeffMatiere(m.coefficient); setModifMatiereId(m.id); setOpenForm(true); }}>Modifier</button>
-                    <button className="btnAnuler" onClick={() => handleDeleteMatiere(m.id)}>Supprimer</button>
-                  </div>
-                </div>
+  {matieres.map((m) => (
+    <li key={m.id} className="flex flex-col p-4 bg-base-100 rounded-lg shadow">
+      {/* En-tête Matière */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+        <span className="font-semibold">{m.nom} (Coeff: {m.coefficient})</span>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <button
+            className="btn btnPrimary w-full sm:w-auto btn-md sm:btn-sm md:btn-md lg:btn-lg"
+            onClick={() => { setMatiereSelectionnee(m.id); setNoteFormOpen(true); }}
+          >
+            Ajouter note
+          </button>
+          <button
+            className="btn btnMofifier w-full sm:w-auto btn-md sm:btn-sm md:btn-md lg:btn-lg"
+            onClick={() => { setNomMatiere(m.nom); setCoeffMatiere(m.coefficient); setModifMatiereId(m.id); setOpenForm(true); }}
+          >
+            Modifier
+          </button>
+          <button
+            className="btn btnAnuler w-full sm:w-auto btn-md sm:btn-sm md:btn-md lg:btn-lg"
+            onClick={() => handleDeleteMatiere(m.id)}
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
 
-                {/* Notes */}
-                {m.notes && m.notes.length > 0 && (
-                  <ul className="mt-2 ml-4 flex flex-col gap-1">
-                    {m.notes.map((n) => (
-                      <li key={n.id} className="flex justify-between items-center text-gray-700">
-                        <span>Note : {n.note}</span>
-                        <div className="flex gap-2">
-                          <button className="btnMofifier" onClick={() => { setNoteMatiere(n.note); setModifNoteId(n.id); setMatiereSelectionnee(m.id); setNoteFormOpen(true); }}>Modifier</button>
-                          <button className="btnAnuler" onClick={() => { setMatiereSelectionnee(m.id); handleDeleteNote(n.id); }}>Supprimer</button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+      {/* Notes */}
+      {m.notes && m.notes.length > 0 && (
+        <ul className="mt-2 flex flex-col gap-2">
+          {m.notes.map((n) => (
+            <li key={n.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-base-200 p-2 rounded shadow">
+              <span className="text-gray-700 mb-2 sm:mb-0">Note : {n.note}</span>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  className="btn btnMofifier w-full sm:w-auto btn-md sm:btn-sm md:btn-md lg:btn-lg"
+                  onClick={() => { setNoteMatiere(n.note); setModifNoteId(n.id); setMatiereSelectionnee(m.id); setNoteFormOpen(true); }}
+                >
+                  Modifier
+                </button>
+                <button
+                  className="btn btnAnuler w-full sm:w-auto btn-md sm:btn-sm md:btn-md lg:btn-lg"
+                  onClick={() => { setMatiereSelectionnee(m.id); handleDeleteNote(n.id); }}
+                >
+                  Supprimer
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
 
-                {/* Moyenne matière */}
-                <div className="mt-2 ml-4 font-semibold">
-                  Moyenne matière : {calculerMoyenneMatiere(m)}
-                </div>
-              </li>
-            ))}
-          </ul>
+      {/* Moyenne matière */}
+      <div className="mt-2 font-semibold">
+        Moyenne matière : {calculerMoyenneMatiere(m)}
+      </div>
+    </li>
+  ))}
+</ul>
+
 
           {/* Formulaire Note */}
           {noteFormOpen && (

@@ -15,15 +15,13 @@ export default async function handler(req, res) {
       return res.status(200).json(data);
     }
 
-    if (req.method === 'DELETE') {
-    const { id } = req.body;
-    const { data, error } = await supabase
-      .from('Matiere')
-      .delete()
-      .eq('id', id);
+      if (req.method === 'DELETE') {
+    const { id } = req.query;
+    const { data, error } = await supabase.from('Matiere').delete().eq('id', id);
     if (error) throw error;
     return res.status(200).json({ message: 'Matière supprimée' });
   }
+
 
     if (req.method === 'PATCH') {
     const { id, nom, coefficient } = req.body;
